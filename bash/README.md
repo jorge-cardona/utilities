@@ -2,6 +2,21 @@
 
 Here are some utilities to use in bash.
 
+### Dot Files
+
+The dot files contains configuration scripts for multiple tools.
+
+To use the Tmux configuration file install the package and the pluggin manager,
+create the folder `~/.tmux/scripts` and move the `get-ip.sh` script to it. This
+will enable the next features:
+
+* Bind the prefix key to `ctrl` + `space`
+* Navigate the history with the mouse scroll wheel
+* Split windows horizontally with `"` and vertically with `%`
+* Move between windows with `<` and `>` arrow keys
+* When a VPN connection is establish display the IP in the status bar
+* Changes the layout's style 
+
 ### Git Multi-Account
 
 The git-multiacc.sh script helps you with the creation and configuration of new
