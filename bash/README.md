@@ -7,8 +7,9 @@ Here are some utilities to use in bash.
 The dot files contains configuration scripts for multiple tools.
 
 To use the Tmux configuration file install the package and the pluggin manager,
-create the folder `~/.tmux/scripts` and move the `get-ip.sh` script to it. This
-will enable the next features:
+copy the file `.tmux.conf` to the home directory, create the folder 
+`~/.tmux/scripts`and copy the `get-ip.sh` script to it. This will enable the
+next features:
 
 * Bind the prefix key to `ctrl` + `space`
 * Navigate the history with the mouse scroll wheel
