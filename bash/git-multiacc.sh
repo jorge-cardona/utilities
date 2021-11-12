@@ -1,5 +1,6 @@
 #! /usr/bin/env bash
 eval homedir=~
+eval config="$homedir/.ssh/config"
 
 keytype=("OpenSSH private key")
 template="# <comment>
@@ -16,7 +17,7 @@ echo -e "Welcome to the GIT Multi-Account utility, Let's create a new key\n"
 echo -e "This is are the keys currently in your .ssh folder\n"
 if [[ ! -e ~/.ssh ]]
 then
-	echo ~/.ssh "doesn't exists"
+	echo "~/.ssh doesn't exists"
 	exit 1
 fi
 
@@ -34,11 +35,11 @@ do
 done
 echo
 
-read -p "Want to create a new key? (y/n): " op
+read -p "Want to create a new key? (y/N): " op
 
-if [[ $op =~ ^("N"|"n")$ ]]
+if [[ ! $op =~ ^("Y"|"y")$ ]]
 then
-	echo "Understandable have a great day"
+	echo "Understandable have a great day!"
 	exit 1
 fi
 
@@ -48,19 +49,29 @@ do
 	read -p "Add a name for the key (ex. github): " name
 	echo
 
-	ssh-keygen -t rsa -b 4096 -f "$homedir/.ssh/id_rsa-$name" -N "" -C "$(whoami)@$name"
+	params=()
+	[[ ! -z "$name" ]] && params+=(-f "$homedir/.ssh/id_rsa-$name" -N "" -C "$(whoami)@$name")
+
+	ssh-keygen -t rsa -b 4096 -N "" -f "$homedir/.ssh/id_rsa" "${params[@]}"
 done
 echo
 
-read -p "Where you going to use this key (ex. github.com): " domain
+[[ -z "$name" ]] && echo "This is going to be the main key, no further steps are required!" && exit 0
+
+while [[ -z "$domain" ]]
+do
+	read -p "Where you going to use this key (ex. github.com): " domain
+
+	[[ -z "$domain" ]] && echo "A domain is required!"
+done
 regex="$domain"
 ow=false
-while [[ $(grep -oP "Host \K(.*)" ~/.ssh/config) =~ $regex ]]
+while [[ -f "$config" && $(grep -oP "Host \K(.*)" "$config") =~ $regex ]]
 do
 	read -p "An entry with this name alredy exists, want to overwrite it? (y/n): " op
 	if [[ $op =~ ^("N"|"n")$ ]]
 	then
-		read -p "Add an aditional alias: " alt
+		read -p "Add an aditional alias (ex. work): " alt
 		alt="""$(sed -e 's/^[[:space:]]*//' <<< "$alt")"""
 		regex="$domain(-$alt)+"
 	else
